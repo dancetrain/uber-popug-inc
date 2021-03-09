@@ -1,0 +1,36 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "application"
+  id 'com.github.johnrengelman.shadow'
+}
+
+dependencies {
+  // Align versions of all Kotlin components
+  implementation platform('org.jetbrains.kotlin:kotlin-bom')
+  // Use the Kotlin JDK 8 standard library.
+  implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+  // Use the Kotlin test library.
+  testImplementation 'org.jetbrains.kotlin:kotlin-test'
+  // Use the Kotlin JUnit integration.
+  testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
+
+  //
+  api("io.ktor:ktor-server-netty:$ktor_version")
+  api("io.ktor:ktor-server-core:$ktor_version")
+  api("io.ktor:ktor-jackson:$ktor_version")
+  api("io.ktor:ktor-network-tls-certificates:$ktor_version")
+}
+
+task generateJks(type: JavaExec, dependsOn: 'classes') {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.uberpopug.tasktracker.CertificateGenerator'
+}
+
+mainClassName = 'io.ktor.server.netty.EngineMain'
+
+// This task will generate your fat JAR and put it in the ./build/libs/ directory
+shadowJar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+}
