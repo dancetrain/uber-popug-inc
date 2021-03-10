@@ -9,8 +9,9 @@ import java.util.concurrent.ConcurrentHashMap
 interface TaskDAO {
 
   suspend fun createTask(): Task
+  suspend fun findTask(taskId: String): Task?
   suspend fun updateTask(task: Task): Task
-  suspend fun deleteTask(task: Task): Task
+  suspend fun deleteTask(taskId: String): Task?
   suspend fun listAll(): List<Task>
 }
 
@@ -32,14 +33,17 @@ class InMemoryTaskDAO(): TaskDAO {
     }
   }
 
+  override suspend fun findTask(taskId: String): Task? {
+    return repository[taskId]
+  }
+
   override suspend fun updateTask(task: Task): Task {
     repository[task.taskId] = task
     return task
   }
 
-  override suspend fun deleteTask(task: Task): Task {
-    repository.remove(task.taskId)
-    return task
+  override suspend fun deleteTask(taskId: String): Task? {
+    return repository.remove(taskId)
   }
 
   override suspend fun listAll(): List<Task> {

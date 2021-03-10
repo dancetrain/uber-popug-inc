@@ -5,7 +5,7 @@ import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import kotlinx.serialization.json.Json
+
 
 /**
  * @author Pavel Borsky
@@ -15,9 +15,10 @@ fun Application.taskRouters() {
 
   routing {
     route("/task") {
-      get {
+      get("") {
         call.respond(taskDAO.listAll())
       }
+
       post {
         val taskInfo = call.receive<TaskInfo>()
         val task = taskDAO.createTask()
@@ -25,16 +26,26 @@ fun Application.taskRouters() {
         taskDAO.updateTask(task)
         call.respond(HttpStatusCode.Created, task)
       }
-      put("{taskId}") {
-
+      put("/{taskId}") {
+        val taskInfo = call.receive<TaskInfo>()
+        val taskId = call.parameters["taskId"]!!
+        val task = taskDAO.updateTask(Task(taskId, taskInfo))
+        call.respond(HttpStatusCode.OK, task)
       }
-      get("{taskId}") {
-
+      get("/{taskId}") {
+        val task = taskDAO.findTask(call.parameters["taskId"]!!)
+        if (task != null) {
+          call.respond(HttpStatusCode.OK, task)
+        } else {
+          call.respond(HttpStatusCode.NotFound)
+        }
       }
-      delete("{taskId}") {
-
+      delete("/{taskId}") {
+        val taskId = call.parameters["taskId"]!!
+        taskDAO.deleteTask(taskId)
+        call.respond(HttpStatusCode.OK, taskId)
       }
     }
-
   }
+
 }

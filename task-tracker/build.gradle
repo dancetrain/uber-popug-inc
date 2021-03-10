@@ -14,12 +14,15 @@ dependencies {
   // Use the Kotlin JUnit integration.
   testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
 
+  implementation "ch.qos.logback:logback-classic:${logback_version}"
+
   //
   implementation("io.ktor:ktor-server-netty:$ktor_version")
   implementation("io.ktor:ktor-server-core:$ktor_version")
   implementation("io.ktor:ktor-jackson:$ktor_version")
-  implementation "io.ktor:ktor-serialization:$ktor_version"
-  implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinx_serialization_version"
+  implementation("io.ktor:ktor-serialization:$ktor_version")
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinx_serialization_version")
+  implementation("io.ktor:ktor-locations:$ktor_version")
 //  implementation("io.ktor:ktor-network-tls-certificates:$ktor_version")
 }
 
@@ -27,8 +30,11 @@ task generateJks(type: JavaExec, dependsOn: 'classes') {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.uberpopug.tasktracker.CertificateGenerator'
 }
-
 mainClassName = 'io.ktor.server.netty.EngineMain'
+
+application {
+  // mainClassName = mainClassName
+}
 
 // This task will generate your fat JAR and put it in the ./build/libs/ directory
 shadowJar {
