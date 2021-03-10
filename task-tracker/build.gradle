@@ -1,24 +1,26 @@
 plugins {
-  id "org.jetbrains.kotlin.jvm"
-  id "application"
+  id 'org.jetbrains.kotlin.jvm'
+  id 'application'
   id 'com.github.johnrengelman.shadow'
+  id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
 dependencies {
   // Align versions of all Kotlin components
   implementation platform('org.jetbrains.kotlin:kotlin-bom')
-  // Use the Kotlin JDK 8 standard library.
-  implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+  implementation 'org.jetbrains.kotlin:kotlin-stdlib'
   // Use the Kotlin test library.
   testImplementation 'org.jetbrains.kotlin:kotlin-test'
   // Use the Kotlin JUnit integration.
   testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
 
   //
-  api("io.ktor:ktor-server-netty:$ktor_version")
-  api("io.ktor:ktor-server-core:$ktor_version")
-  api("io.ktor:ktor-jackson:$ktor_version")
-  api("io.ktor:ktor-network-tls-certificates:$ktor_version")
+  implementation("io.ktor:ktor-server-netty:$ktor_version")
+  implementation("io.ktor:ktor-server-core:$ktor_version")
+  implementation("io.ktor:ktor-jackson:$ktor_version")
+  implementation "io.ktor:ktor-serialization:$ktor_version"
+  implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinx_serialization_version"
+//  implementation("io.ktor:ktor-network-tls-certificates:$ktor_version")
 }
 
 task generateJks(type: JavaExec, dependsOn: 'classes') {

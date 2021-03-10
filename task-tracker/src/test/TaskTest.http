@@ -1,0 +1,10 @@
+POST http://127.0.0.1:8080/task
+Content-Type: application/json
+
+{"taskTitle": "test"}
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 201, "Response status is not 201");
+});
+%}
