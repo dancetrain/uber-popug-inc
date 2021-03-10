@@ -24,6 +24,8 @@ dependencies {
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinx_serialization_version")
   implementation("io.ktor:ktor-locations:$ktor_version")
 //  implementation("io.ktor:ktor-network-tls-certificates:$ktor_version")
+
+  testImplementation("io.ktor:ktor-server-tests:$ktor_version")
 }
 
 task generateJks(type: JavaExec, dependsOn: 'classes') {

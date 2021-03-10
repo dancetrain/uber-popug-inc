@@ -18,7 +18,6 @@ fun Application.taskRouters() {
       get("") {
         call.respond(taskDAO.listAll())
       }
-
       post {
         val taskInfo = call.receive<TaskInfo>()
         val task = taskDAO.createTask()
@@ -42,8 +41,13 @@ fun Application.taskRouters() {
       }
       delete("/{taskId}") {
         val taskId = call.parameters["taskId"]!!
-        taskDAO.deleteTask(taskId)
-        call.respond(HttpStatusCode.OK, taskId)
+        val task = taskDAO.deleteTask(taskId)
+        if (task != null) {
+          call.respond(HttpStatusCode.OK, task)
+        } else {
+          // For security reasons, return OK?
+          call.respond(HttpStatusCode.NotFound)
+        }
       }
     }
   }

@@ -22,7 +22,7 @@ fun main(args: Array<String>): Unit {
 /**
  * @author Pavel Borsky
  */
-fun Application.main() {
+fun Application.module(testing: Boolean = false) {
   install(DefaultHeaders)
   install(CallLogging) {
     level = Level.DEBUG
@@ -33,7 +33,8 @@ fun Application.main() {
     })
   }
   install(Locations)
-  install(Routing) {
+  install(Routing)
+  routing {
     get("/") {
       call.respondText(
         "",
@@ -48,7 +49,6 @@ fun Application.main() {
         HttpStatusCode.OK
       )
     }
-
-    taskRouters()
   }
+  taskRouters()
 }
