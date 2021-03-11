@@ -11,6 +11,9 @@ import io.ktor.serialization.*
 import kotlinx.serialization.json.Json
 import org.slf4j.event.Level
 import java.util.logging.Logger
+import kotlin.time.Duration
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 fun main(args: Array<String>): Unit {
   val logger = Logger.getLogger("com.uberpopug.tasktracker.Application")
@@ -34,6 +37,10 @@ fun Application.module(testing: Boolean = false) {
   }
   install(Locations)
   install(Routing)
+  install(CORS) {
+    method(HttpMethod.Options)
+    host("localhost:3000")
+  }
   routing {
     get("/") {
       call.respondText(
