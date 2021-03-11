@@ -9,5 +9,6 @@
 rootProject.name = 'UberPopug'
 
 include(
-  'task-tracker'
+  'task-tracker',
+  'auth-service',
 )

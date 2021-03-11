@@ -1,0 +1,38 @@
+plugins {
+  id 'org.jetbrains.kotlin.jvm'
+  id 'application'
+  id 'com.github.johnrengelman.shadow'
+  id 'org.jetbrains.kotlin.plugin.serialization'
+}
+
+dependencies {
+  // Align versions of all Kotlin components
+  implementation platform('org.jetbrains.kotlin:kotlin-bom')
+  implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+  // Use the Kotlin test library.
+  testImplementation 'org.jetbrains.kotlin:kotlin-test'
+  // Use the Kotlin JUnit integration.
+  testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
+
+  implementation "ch.qos.logback:logback-classic:${logback_version}"
+
+  //
+  implementation("io.ktor:ktor-server-netty:$ktor_version")
+  implementation("io.ktor:ktor-server-core:$ktor_version")
+  implementation("io.ktor:ktor-jackson:$ktor_version")
+  implementation("io.ktor:ktor-serialization:$ktor_version")
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinx_serialization_version")
+  implementation("io.ktor:ktor-locations:$ktor_version")
+//  implementation("io.ktor:ktor-network-tls-certificates:$ktor_version")
+
+  testImplementation("io.ktor:ktor-server-tests:$ktor_version")
+}
+
+mainClassName = 'io.ktor.server.netty.EngineMain'
+
+// This task will generate your fat JAR and put it in the ./build/libs/ directory
+shadowJar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+}
