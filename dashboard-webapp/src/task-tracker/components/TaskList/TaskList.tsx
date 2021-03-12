@@ -5,6 +5,7 @@ import { ButtonGroup, ButtonToolbar, Card, Col, Row } from "react-bootstrap";
 import TaskButtonAdd from "../TaskButtonAdd/TaskButtonAdd";
 import { Task } from "../../types/tasks";
 import TaskButtonEdit from "../TaskButtonEdit/TaskButtonEdit";
+import TaskButtonComplete from "../TaskButtonComplete/TaskButtonComplete";
 
 interface TaskListItemProps {
   task: Task,
@@ -27,7 +28,10 @@ const TaskListItem: React.FC<TaskListItemProps> = props => {
           {props.children}
         </Card.Text>
         <Card.Text>
-          Created by {props.task.taskInfo?.taskOwner?.publicName}
+          Assigned <strong>{props.task.assignedPopug?.publicName}</strong>
+        </Card.Text>
+        <Card.Text>
+          Complete? {props.task.complete ? 'Yes' : 'No'}
         </Card.Text>
       </Card.Body>
       <Card.Footer>
@@ -39,6 +43,9 @@ const TaskListItem: React.FC<TaskListItemProps> = props => {
               }
               console.log("Task modified", task)
             }} />
+            <TaskButtonComplete task={props.task} onComplete={task => {
+              props.onUpdate(task)
+            }} />
           </ButtonGroup>
         </ButtonToolbar>
       </Card.Footer>
@@ -46,7 +53,11 @@ const TaskListItem: React.FC<TaskListItemProps> = props => {
   )
 }
 
-const TaskList: React.FC = () => {
+export interface TaskListProps {
+  tasks: Task[]
+}
+
+const TaskList: React.FC<TaskListProps> = props => {
   const [newTask, setNewTask] = useState<Task | undefined>(undefined);
   const {tasks, isLoading, error} = useFetchTasks()
 

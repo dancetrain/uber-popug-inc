@@ -34,7 +34,7 @@ fun Application.taskRouters() {
       put("/reassign") {
         val popugRange = 1..10
 
-        taskDAO.findInComplete().map { task ->
+        val tasks = taskDAO.findInComplete().map { task ->
           // get random popug
           taskDAO.updateTask(taskId = task.taskId) {
             if (it.complete) {
@@ -45,10 +45,13 @@ fun Application.taskRouters() {
               it.copy(assignedPopug = UserInfo("Popug ${popugRange.random()}"))
             }
           }
-        }.filterNot { it.complete }.forEach { task ->
+        }.filterNot { it.complete }
+
+        tasks.forEach { task ->
           // notify about assignment
           logger.info("New task assignment! {}", task)
         }
+        call.respond(tasks)
       }
     }
     route("/task") {

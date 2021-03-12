@@ -7,12 +7,13 @@ export interface UserInfo {
 export interface TaskInfo {
   taskTitle: string
   taskDescription: string
-  assignedPopug?: UserInfo
 }
 
 export interface Task {
   taskId: string
   taskInfo?: TaskInfo
+  complete: boolean
+  assignedPopug?: UserInfo
 }
 
 export const UserInfoSchema = {
