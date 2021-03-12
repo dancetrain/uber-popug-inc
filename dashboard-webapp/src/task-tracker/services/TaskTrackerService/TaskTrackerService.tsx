@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Task, TaskInfo } from "../../types/tasks";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 
 
 export function useFetchTasks() {
@@ -49,6 +49,16 @@ export function useFetchTask(taskId: string) {
     isLoading,
     error
   }
+}
+
+export function executeCreateTask(taskInfo: TaskInfo): Promise<Task> {
+  return fetch(`http://localhost:8080/task`, {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      method: "POST",
+      body: JSON.stringify(taskInfo)
+    }).then(res => res.json())
 }
 
 export function useUpdateTask(taskId: string, taskInfo: TaskInfo) {
