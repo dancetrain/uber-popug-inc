@@ -1,5 +1,6 @@
 package com.uberpopug.tasktracker.task
 
+import java.lang.RuntimeException
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
@@ -10,9 +11,11 @@ interface TaskDAO {
 
   suspend fun createTask(): Task
   suspend fun findTask(taskId: String): Task?
-  suspend fun updateTask(task: Task): Task
+  suspend fun updateTask(taskId: String, updateFn: (Task) -> Task): Task
   suspend fun deleteTask(taskId: String): Task?
   suspend fun listAll(): List<Task>
+  suspend fun findInComplete(): List<Task>
+  suspend fun findByPopug(popugName: String): List<Task>
 }
 
 /**
@@ -20,22 +23,6 @@ interface TaskDAO {
  */
 class InMemoryTaskDAO(): TaskDAO {
   private val repository: MutableMap<String, Task> = ConcurrentHashMap()
-
-  init {
-    repeat(10) {
-      val task = Task(
-        taskId = UUID.randomUUID().toString(),
-        taskInfo = TaskInfo(
-          taskTitle = "Task Title $it",
-          taskDescription = "Task description $it"
-        ),
-        taskOwner = UserInfo(
-          publicName = "admin"
-        )
-      )
-      repository[task.taskId] = task
-    }
-  }
 
   override suspend fun createTask(): Task {
     val taskId = UUID.randomUUID().toString()
@@ -53,9 +40,20 @@ class InMemoryTaskDAO(): TaskDAO {
     return repository[taskId]
   }
 
-  override suspend fun updateTask(task: Task): Task {
-    repository[task.taskId] = task
-    return task
+  override suspend fun updateTask(taskId: String, updateFn: (Task) -> Task): Task {
+    val task = repository.compute(taskId) { _, currentTask ->
+      if (currentTask != null) {
+        updateFn.invoke(currentTask)
+      } else {
+        null
+      }
+    }
+
+    if (task != null) {
+      return task
+    } else {
+      throw RuntimeException("Task $taskId NotFound")
+    }
   }
 
   override suspend fun deleteTask(taskId: String): Task? {
@@ -64,5 +62,13 @@ class InMemoryTaskDAO(): TaskDAO {
 
   override suspend fun listAll(): List<Task> {
     return repository.values.toList()
+  }
+
+  override suspend fun findInComplete(): List<Task> {
+    return repository.values.filterNot { it.complete }
+  }
+
+  override suspend fun findByPopug(popugName: String): List<Task> {
+    return repository.values.filter { it.assignedPopug?.publicName == popugName }
   }
 }

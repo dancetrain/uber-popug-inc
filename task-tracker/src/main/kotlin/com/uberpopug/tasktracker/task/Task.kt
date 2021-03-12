@@ -18,6 +18,6 @@ data class TaskInfo(
 data class Task(
   val taskId: String,
   val taskInfo: TaskInfo? = null,
-  val taskOwner: UserInfo? = null,
-  val assignedUser: UserInfo? = null
+  val complete: Boolean = false,
+  val assignedPopug: UserInfo? = null
 )

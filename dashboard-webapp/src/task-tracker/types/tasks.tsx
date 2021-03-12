@@ -7,8 +7,7 @@ export interface UserInfo {
 export interface TaskInfo {
   taskTitle: string
   taskDescription: string
-  taskOwner?: UserInfo
-  assignedUser?: UserInfo
+  assignedPopug?: UserInfo
 }
 
 export interface Task {
@@ -69,10 +68,7 @@ export const TaskSchema = {
     "taskInfo": {
       "$ref": "#/definitions/taskInfo"
     },
-    "taskOwner": {
-      "$ref": "#/definitions/userInfo"
-    },
-    "assignedUser": {
+    "assignedPopug": {
       "$ref": "#/definitions/userInfo"
     }
   },
