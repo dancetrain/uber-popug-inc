@@ -6,6 +6,7 @@ export interface UserInfo {
 
 export interface TaskInfo {
   taskTitle: string
+  taskDescription: string
   taskOwner?: UserInfo
   assignedUser?: UserInfo
 }
@@ -34,6 +35,9 @@ export const TaskInfoSchema = {
     "taskTitle": {
       "type": "string" as const,
     },
+    "taskDescription": {
+      "type": "string" as const,
+    },
     "taskOwner": {
       "$ref": "#/definitions/userInfo"
     },
@@ -44,7 +48,7 @@ export const TaskInfoSchema = {
   "definitions": {
     "userInfo": UserInfoSchema
   },
-  "required": ["taskTitle"]
+  "required": ["taskTitle", "taskDescription"]
 }
 
 
@@ -54,10 +58,14 @@ export const TaskSchema = {
   "properties": {
     "taskId": {
       "type": "string" as const,
+    },
+    "taskInfo": {
+      "$ref": "#/definitions/taskInfo"
     }
   },
   "definitions": {
-    "taskInfo": TaskInfoSchema
+    "taskInfo": TaskInfoSchema,
+    "userInfo": UserInfoSchema
   },
-  "required": ["taskId"]
+  "required": ["taskId", "taskInfo"]
 }

@@ -11,6 +11,7 @@ data class UserInfo(
 @Serializable
 data class TaskInfo(
   val taskTitle: String,
+  val taskDescription: String,
   val taskOwner: UserInfo? = null,
   val assignedUser: UserInfo? = null
 )

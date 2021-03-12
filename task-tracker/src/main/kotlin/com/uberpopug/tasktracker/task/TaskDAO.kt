@@ -21,6 +21,22 @@ interface TaskDAO {
 class InMemoryTaskDAO(): TaskDAO {
   private val repository: MutableMap<String, Task> = ConcurrentHashMap()
 
+  init {
+    repeat(10) {
+      val task = Task(
+        taskId = UUID.randomUUID().toString(),
+        taskInfo = TaskInfo(
+          taskTitle = "Task Title $it",
+          taskDescription = "Task description $it",
+          taskOwner = UserInfo(
+            publicName = "admin"
+          )
+        )
+      )
+      repository[task.taskId] = task
+    }
+  }
+
   override suspend fun createTask(): Task {
     val taskId = UUID.randomUUID().toString()
     // recursive call until we succeed with random generation

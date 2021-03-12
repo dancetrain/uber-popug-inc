@@ -39,6 +39,12 @@ fun Application.module(testing: Boolean = false) {
   install(Routing)
   install(CORS) {
     method(HttpMethod.Options)
+    method(HttpMethod.Put)
+
+    header(HttpHeaders.AccessControlAllowHeaders)
+    header(HttpHeaders.AccessControlAllowOrigin)
+    header(HttpHeaders.ContentType)
+
     host("localhost:3000")
   }
   routing {

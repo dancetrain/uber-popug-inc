@@ -10,7 +10,7 @@ export function useFetchTasks() {
      fetch('http://localhost:8080/task').then(res =>
        res.json()
      ).then((tasks: Task[]) => {
-       if (tasks && tasks.length && typeof (tasks) === 'object') {
+       if (tasks && typeof (tasks) === 'object') {
          setTasks(tasks)
        } else {
          console.log("Wrong response", tasks)
@@ -61,11 +61,8 @@ export function executeCreateTask(taskInfo: TaskInfo): Promise<Task> {
     }).then(res => res.json())
 }
 
-export function useUpdateTask(taskId: string, taskInfo: TaskInfo) {
-  const [task, setTask] = useState<Task | null>(null)
-
-  const { isLoading, error } = useQuery(`task-${taskId}`, () =>
-     fetch(`http://localhost:8080/task/${taskId}`, {
+export function executeUpdateTask(taskId: string, taskInfo: TaskInfo): Promise<Task> {
+ return fetch(`http://localhost:8080/task/${taskId}`, {
        headers: {
          "Content-Type": "application/json"
        },
@@ -73,20 +70,7 @@ export function useUpdateTask(taskId: string, taskInfo: TaskInfo) {
        body: JSON.stringify(taskInfo)
      }).then(res =>
        res.json()
-     ).then((task: Task) => {
-       if (task && typeof (task) === 'object') {
-         setTask(task)
-       } else {
-         console.log("Wrong response", task)
-       }
-     })
-   )
-
-  return {
-    task,
-    isLoading,
-    error
-  }
+     );
 }
 
 export function useDeleteTask(taskId: string) {
