@@ -27,10 +27,10 @@ class InMemoryTaskDAO(): TaskDAO {
         taskId = UUID.randomUUID().toString(),
         taskInfo = TaskInfo(
           taskTitle = "Task Title $it",
-          taskDescription = "Task description $it",
-          taskOwner = UserInfo(
-            publicName = "admin"
-          )
+          taskDescription = "Task description $it"
+        ),
+        taskOwner = UserInfo(
+          publicName = "admin"
         )
       )
       repository[task.taskId] = task

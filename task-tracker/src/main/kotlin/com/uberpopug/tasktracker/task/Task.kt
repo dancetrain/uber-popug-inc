@@ -12,12 +12,12 @@ data class UserInfo(
 data class TaskInfo(
   val taskTitle: String,
   val taskDescription: String,
-  val taskOwner: UserInfo? = null,
-  val assignedUser: UserInfo? = null
 )
 
 @Serializable
 data class Task(
   val taskId: String,
-  val taskInfo: TaskInfo? = null
+  val taskInfo: TaskInfo? = null,
+  val taskOwner: UserInfo? = null,
+  val assignedUser: UserInfo? = null
 )

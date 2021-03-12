@@ -37,20 +37,27 @@ export const TaskInfoSchema = {
     },
     "taskDescription": {
       "type": "string" as const,
-    },
-    "taskOwner": {
-      "$ref": "#/definitions/userInfo"
-    },
-    "assignedUser": {
-      "$ref": "#/definitions/userInfo"
     }
-  },
-  "definitions": {
-    "userInfo": UserInfoSchema
   },
   "required": ["taskTitle", "taskDescription"]
 }
 
+export const CreateTaskSchema = {
+  "id": "urn:jsonschema:com:uberpopug:tasktracker:task:Task",
+  "type": "object" as const,
+  "properties": {
+    "taskInfo": {
+      "$ref": "#/definitions/taskInfo"
+    },
+    "taskOwner": {
+      "$ref": "#/definitions/userInfo"
+    },
+  },
+  "definitions": {
+    "taskInfo": TaskInfoSchema,
+    "userInfo": UserInfoSchema
+  },
+}
 
 export const TaskSchema = {
   "id": "urn:jsonschema:com:uberpopug:tasktracker:task:Task",
@@ -61,6 +68,12 @@ export const TaskSchema = {
     },
     "taskInfo": {
       "$ref": "#/definitions/taskInfo"
+    },
+    "taskOwner": {
+      "$ref": "#/definitions/userInfo"
+    },
+    "assignedUser": {
+      "$ref": "#/definitions/userInfo"
     }
   },
   "definitions": {

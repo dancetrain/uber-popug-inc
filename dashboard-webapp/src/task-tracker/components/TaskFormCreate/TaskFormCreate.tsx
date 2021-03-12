@@ -1,6 +1,6 @@
 import React from 'react';
 import './TaskFormCreate.css';
-import { Task, TaskInfo, TaskInfoSchema } from "../../types/tasks";
+import { CreateTaskSchema, Task, TaskInfo, TaskInfoSchema } from "../../types/tasks";
 import Form, { ISubmitEvent } from "@rjsf/core"
 import { executeCreateTask } from "../../services/TaskTrackerService/TaskTrackerService";
 
@@ -9,10 +9,10 @@ export interface TaskFormCreateProperties {
 }
 
 const TaskFormCreate: React.FC<TaskFormCreateProperties> = props => {
-  const submitHandler: { (event: ISubmitEvent<TaskInfo>): void } = evt => {
+  const submitHandler: { (event: ISubmitEvent<Task>): void } = evt => {
     console.log("TaskFormCreate Submit:", evt.formData);
 
-    executeCreateTask(evt.formData)
+    executeCreateTask(evt.formData.taskInfo!!)
       .then(task => {
         props.onSubmit(task);
       })
@@ -20,7 +20,7 @@ const TaskFormCreate: React.FC<TaskFormCreateProperties> = props => {
 
   return (
     <div className="TaskFormCreate">
-      <Form schema={TaskInfoSchema}
+      <Form schema={CreateTaskSchema}
             onSubmit={submitHandler}
       />
     </div>
