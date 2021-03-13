@@ -42,6 +42,7 @@ fun Application.taskRouters() {
               it
             } else {
               val currentPopug = it.assignedPopug
+              // @TODO(pavelb): subtract from popug account somehow
               it.copy(assignedPopug = UserInfo("Popug ${popugRange.random()}"))
             }
           }
@@ -56,7 +57,7 @@ fun Application.taskRouters() {
     }
     route("/task") {
       get("") {
-        call.respond(taskDAO.listAll())
+        call.respond(taskDAO.findInComplete())
       }
       post {
         val taskInfo = call.receive<TaskInfo>()
