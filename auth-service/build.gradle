@@ -5,6 +5,12 @@ plugins {
   id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
+repositories {
+  maven {
+    url 'https://dl.bintray.com/adhesivee/oauth2-server'
+  }
+}
+
 dependencies {
   // Align versions of all Kotlin components
   implementation platform('org.jetbrains.kotlin:kotlin-bom')
@@ -15,6 +21,13 @@ dependencies {
   testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
 
   implementation "ch.qos.logback:logback-classic:${logback_version}"
+
+  implementation "org.mapdb:mapdb:3.0.7"
+  implementation "nl.myndocs:oauth2-server-ktor:$myndocs_oauth_version"
+   // In memory dependencies
+  implementation "nl.myndocs:oauth2-server-client-inmemory:$myndocs_oauth_version"
+  implementation "nl.myndocs:oauth2-server-identity-inmemory:$myndocs_oauth_version"
+  implementation "nl.myndocs:oauth2-server-token-store-inmemory:$myndocs_oauth_version"
 
   //
   implementation("io.ktor:ktor-server-netty:$ktor_version")

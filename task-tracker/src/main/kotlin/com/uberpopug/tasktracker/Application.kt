@@ -1,5 +1,6 @@
 package com.uberpopug.tasktracker
 
+import com.uberpopug.tasktracker.task.FileBasedTaskDAO
 import com.uberpopug.tasktracker.task.taskRouters
 import io.ktor.application.*
 import io.ktor.features.*
@@ -9,6 +10,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.serialization.*
 import kotlinx.serialization.json.Json
+import org.mapdb.DBMaker
 import org.slf4j.event.Level
 import java.util.logging.Logger
 import kotlin.time.Duration
@@ -63,5 +65,7 @@ fun Application.module(testing: Boolean = false) {
       )
     }
   }
-  taskRouters()
+  val db = DBMaker.fileDB("task-traker-db").make()
+  val taskDAO = FileBasedTaskDAO(db)
+  taskRouters(taskDAO)
 }

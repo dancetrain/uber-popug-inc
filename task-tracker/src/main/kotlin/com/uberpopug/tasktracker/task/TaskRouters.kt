@@ -6,25 +6,26 @@ import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.coroutines.runBlocking
+import org.mapdb.DB
 import org.slf4j.LoggerFactory
 
 
 /**
  * @author Pavel Borsky
  */
-fun Application.taskRouters() {
+fun Application.taskRouters(taskDAO: TaskDAO) {
   val logger = LoggerFactory.getLogger("com.uberpopug.tasktracker.task.TaskRouters")
-  val taskDAO: TaskDAO = InMemoryTaskDAO()
-
   runBlocking {
-    repeat(10) {
-      taskDAO.updateTask(taskId = taskDAO.createTask().taskId) { task ->
-        task.copy(
-          taskInfo = TaskInfo(
-            taskTitle = "Task Title $it",
-            taskDescription = "Task description $it"
-          ),
-        )
+    if (taskDAO.isEmpty()) {
+      repeat(10) {
+        taskDAO.updateTask(taskId = taskDAO.createTask().taskId) { task ->
+          task.copy(
+            taskInfo = TaskInfo(
+              taskTitle = "Task Title $it",
+              taskDescription = "Task description $it"
+            ),
+          )
+        }
       }
     }
   }

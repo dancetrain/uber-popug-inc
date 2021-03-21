@@ -49,9 +49,6 @@ export const CreateTaskSchema = {
     "taskInfo": {
       "$ref": "#/definitions/taskInfo"
     },
-    "taskOwner": {
-      "$ref": "#/definitions/userInfo"
-    },
   },
   "definitions": {
     "taskInfo": TaskInfoSchema,

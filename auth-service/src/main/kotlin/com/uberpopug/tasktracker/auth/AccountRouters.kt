@@ -5,13 +5,12 @@ import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import org.mapdb.DB
 
 /**
  * @author Pavel Borsky
  */
-fun Application.authRouters() {
-  val repository: AccountDAO = InMemoryAccountDAO()
-
+fun Application.authRouters(repository: AccountDAO) {
   routing {
     route("/auth") {
       get("") {
