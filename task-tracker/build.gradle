@@ -16,8 +16,11 @@ dependencies {
 
   implementation "ch.qos.logback:logback-classic:${logback_version}"
 
-  // Repository
+  // Data storage
   implementation "org.mapdb:mapdb:3.0.7"
+
+  // Auth
+  implementation "io.ktor:ktor-auth:$ktor_version"
 
   //
   implementation("io.ktor:ktor-server-netty:$ktor_version")
@@ -28,6 +31,7 @@ dependencies {
   implementation("io.ktor:ktor-locations:$ktor_version")
 //  implementation("io.ktor:ktor-network-tls-certificates:$ktor_version")
 
+  implementation "io.ktor:ktor-client-apache:$ktor_version"
   testImplementation("io.ktor:ktor-server-tests:$ktor_version")
 }
 

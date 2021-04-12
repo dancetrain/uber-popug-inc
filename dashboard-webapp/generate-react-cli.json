@@ -11,8 +11,22 @@
       "withStory": false,
       "withLazy": false
     },
+    "page": {
+      "path": "src/pages",
+      "withStyle": true,
+      "withTest": false,
+      "withStory": false,
+      "withLazy": false
+    },
     "task-tracker": {
       "path": "src/task-tracker/components",
+      "withStyle": true,
+      "withTest": false,
+      "withStory": false,
+      "withLazy": false
+    },
+    "auth-service": {
+      "path": "src/auth-service/components",
       "withStyle": true,
       "withTest": false,
       "withStory": false,

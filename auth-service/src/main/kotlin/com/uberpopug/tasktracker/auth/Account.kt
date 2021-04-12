@@ -1,6 +1,7 @@
 package com.uberpopug.tasktracker.auth
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 /**
  * @author Pavel Borsky
@@ -10,11 +11,15 @@ import kotlinx.serialization.Serializable
 data class Role(
   val name: String
 )
+
 @Serializable
 data class AccountInfo(
-  val username: String
-)
-
+  val fullName: String
+) {
+  companion object {
+    val EMPTY = AccountInfo("")
+  }
+}
 @Serializable
 data class AuthInfo(
   val passwordHash: String,
@@ -24,12 +29,16 @@ data class AuthInfo(
     val NONE = AuthInfo("", "")
   }
 }
+
 @Serializable
 data class Account(
-  val accountInfo: AccountInfo,
+  val username: String,
+  val accountInfo: AccountInfo = AccountInfo.EMPTY,
+
+  @Transient
   val authInfo: AuthInfo = AuthInfo.NONE,
   val roles: Set<Role> = emptySet()
 ) {
   val publicId: String
-    get() = accountInfo.username
+    get() = username
 }

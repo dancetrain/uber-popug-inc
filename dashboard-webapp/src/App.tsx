@@ -8,6 +8,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { QueryClient, QueryClientProvider } from "react-query";
 import MainPage from "./pages/MainPage/MainPage";
+import AuthPage from "./pages/AuthPage/AuthPage";
 
 library.add(fas);
 
@@ -22,6 +23,7 @@ function App() {
                 </Jumbotron>
                 <hr />
                 <Container>
+                  <AuthPage />
                   <MainPage />
                 </Container>
             </div>

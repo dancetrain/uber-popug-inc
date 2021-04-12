@@ -1,7 +1,9 @@
 package com.uberpopug.tasktracker
 
-import com.uberpopug.tasktracker.auth.FileBasedAccountDAO
-import com.uberpopug.tasktracker.auth.authRouters
+import com.uberpopug.tasktracker.auth.*
+import com.uberpopug.tasktracker.oauth.PopugClientService
+import com.uberpopug.tasktracker.oauth.PopugTokenStore
+import com.uberpopug.tasktracker.oauth.PopupIdentityService
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
@@ -9,11 +11,8 @@ import io.ktor.locations.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.serialization.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.Json
-import nl.myndocs.oauth2.client.inmemory.InMemoryClient
-import nl.myndocs.oauth2.identity.inmemory.InMemoryIdentity
-import nl.myndocs.oauth2.ktor.feature.Oauth2ServerFeature
-import nl.myndocs.oauth2.tokenstore.inmemory.InMemoryTokenStore
 import org.mapdb.DBMaker
 import org.slf4j.event.Level
 import java.util.logging.Logger
@@ -23,12 +22,12 @@ import java.util.logging.Logger
  */
 fun main(args: Array<String>): Unit {
   val logger = Logger.getLogger("com.uberpopug.tasktracker.Application")
-  logger.info("Starting task-tracker with params: [${args.joinToString(",")}]")
+  logger.info("Starting auth-service with params: [${args.joinToString(",")}]")
   io.ktor.server.netty.EngineMain.main(args)
   logger.info("Done.")
 }
 
-fun Application.module(testing: Boolean = false) {
+fun Application.module() {
   install(DefaultHeaders)
   install(CallLogging) {
     level = Level.DEBUG
@@ -50,8 +49,10 @@ fun Application.module(testing: Boolean = false) {
 
     host("localhost:3000")
   }
-  install(Oauth2ServerFeature)
   routing {
+    trace {
+      application.log.debug(it.buildText())
+    }
     get("/") {
       call.respondText(
         "",
@@ -66,9 +67,44 @@ fun Application.module(testing: Boolean = false) {
         HttpStatusCode.OK
       )
     }
-  }
+    get("/routes") {
 
-  val db = DBMaker.fileDB("auth-db").make()
+      call.respondText {
+
+        call.application.locations.registeredLocations.map {
+          it.path
+        }.toString()
+      }
+    }
+  }
+  val db = DBMaker
+    .fileDB("auth-service-db").checksumHeaderBypass().make()
   val accountDAO = FileBasedAccountDAO(db)
-  authRouters(accountDAO)
+
+  val identityService = PopupIdentityService(
+    accountDAO,
+    Dispatchers.IO
+  )
+
+  val clientService = PopugClientService(
+    FileBasedClientApplicationDAO(db),
+    Dispatchers.IO
+  )
+
+  val tokenStore = PopugTokenStore()
+
+  val oAuthConfiguration = Configuration(
+    identityService = identityService,
+    clientService = clientService,
+    tokenStore = tokenStore
+  )
+
+  oAuthRouters(oAuthConfiguration)
+
+
+  authRouters(AccountService(accountDAO))
+  environment.monitor.subscribe(ApplicationStopped){
+    db.commit()
+    db.close()
+  }
 }

@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap
  * @author Pavel Borsky
  */
 interface AccountDAO {
-  suspend fun createAccount(accountInfo: AccountInfo): Account
+  suspend fun createAccount(username: String, apply: (Account) -> Account): Account
   suspend fun findAccount(id: String): Account?
   suspend fun updateAccount(id: String, accountInfo: AccountInfo): Account?
   suspend fun updateAccount(id: String, roles: Iterable<Role>): Account?
@@ -22,10 +22,11 @@ interface AccountDAO {
 class InMemoryAccountDAO(): AccountDAO {
   private val repository: MutableMap<String, Account> = ConcurrentHashMap()
 
-  override suspend fun createAccount(accountInfo: AccountInfo): Account {
-    val account = Account(accountInfo)
+  override suspend fun createAccount(username: String, apply: (Account) -> Account): Account {
+    val account = Account(username)
+    // @FIXME: possible username change
     if (!repository.contains(account.publicId)) {
-      repository[account.publicId] = account
+      repository[account.publicId] = apply.invoke(account)
     } else {
       // @FIXME(pavelb): throw an error if same public id?
     }
@@ -80,10 +81,10 @@ class FileBasedAccountDAO(db: DB): AccountDAO {
       valueSerializer = AccountSerializer()
     ).createOrOpen() as HTreeMap<String, Account>
 
-  override suspend fun createAccount(accountInfo: AccountInfo): Account {
-    val account = Account(accountInfo)
+  override suspend fun createAccount(username: String, apply: (Account) -> Account): Account {
+    val account = Account(username)
     if (!repository.contains(account.publicId)) {
-      repository[account.publicId] = account
+      repository[account.publicId] = apply.invoke(account)
     } else {
       // @FIXME(pavelb): throw an error if same public id?
     }
@@ -111,6 +112,6 @@ class FileBasedAccountDAO(db: DB): AccountDAO {
   }
 
   override suspend fun listAll(): List<Account> {
-    return repository.values.filterNotNull().toList()
+    return repository.values.filterNotNull()
   }
 }

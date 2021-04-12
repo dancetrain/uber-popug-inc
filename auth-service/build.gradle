@@ -23,6 +23,7 @@ dependencies {
   implementation "ch.qos.logback:logback-classic:${logback_version}"
 
   implementation "org.mapdb:mapdb:3.0.7"
+  implementation "nl.myndocs:oauth2-server-core:$myndocs_oauth_version"
   implementation "nl.myndocs:oauth2-server-ktor:$myndocs_oauth_version"
    // In memory dependencies
   implementation "nl.myndocs:oauth2-server-client-inmemory:$myndocs_oauth_version"
@@ -39,6 +40,11 @@ dependencies {
 //  implementation("io.ktor:ktor-network-tls-certificates:$ktor_version")
 
   testImplementation("io.ktor:ktor-server-tests:$ktor_version")
+
+  implementation "io.ktor:ktor-auth:$ktor_version"
+  implementation("io.ktor:ktor-html-builder:$ktor_version")
+  implementation("io.ktor:ktor-auth-ldap:$ktor_version")
+  implementation "io.ktor:ktor-client-apache:$ktor_version"
 }
 
 mainClassName = 'io.ktor.server.netty.EngineMain'

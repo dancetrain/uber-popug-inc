@@ -1,0 +1,4 @@
+POST http://127.0.0.1:9080/account
+Content-Type: application/json
+
+{"username": "test-user", "password": "plain password"}
